@@ -1,8 +1,8 @@
 {
   "name": "my_package",
   "version": "1.0.0",
-  "description": "LIRI is a Language Interpretation and Recognition Interface.",
-  "main": "index.js",
+  "description": "my npm packages for the liri project",
+  "main": "keys.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,7 +17,6 @@
   },
   "homepage": "https://github.com/Bryanp2033/liri-node-app#readme",
   "dependencies": {
-    "node-spotify-api": "^1.0.7",
     "request": "^2.82.0",
     "twitter": "^1.7.1"
   }
