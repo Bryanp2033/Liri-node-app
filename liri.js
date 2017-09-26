@@ -1,6 +1,7 @@
 var SpotifyWebApi = require('spotify-web-api-node');
 var request = require('request');
 var Twitter = require('twitter');
+var fs = require('fs')
 var key = require("./keys.js");
 
 
@@ -66,70 +67,113 @@ var value = process.argv[3];
 
         case "my-tweets":
 
-        var client = new Twitter({
-            consumer_key: consumer_key,
-            consumer_secret: consumer_secret,
-            access_token_key: access_token_key,
-            access_token_secret: access_token_secret
-          });
-           
-          var params = {screen_name: 'Joel The Troll'};
-          client.get('statuses/user_timeline', params, function(error, tweets, response) {
+            var client = new Twitter({
+                consumer_key: consumer_key,
+                consumer_secret: consumer_secret,
+                access_token_key: access_token_key,
+                access_token_secret: access_token_secret
+            });
+            
+            var params = {screen_name: 'Joel The Troll'};
+            client.get('statuses/user_timeline', params, function(error, tweets, response) {
 
-            if (error){
-                console.log(error)
-            }
-
-            if (!error) {
-                for(i = 0; i < tweets.length; i++){
-                    console.log("Tweet #" + [i])
-                    console.log("__________________________________")
-                    console.log(" ")
-                    console.log("Text: " + tweets[i].text);
-                    console.log(" ")
-                    console.log("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
-                    console.log(" ")
-                    console.log("Created at: " + tweets[i].created_at);
-                    console.log("__________________________________")
-                    console.log(" ")
+                if (error){
+                    console.log(error)
                 }
-            }
+
+                if (!error) {
+                    for(i = 0; i < tweets.length; i++){
+                        console.log("Tweet #" + [i])
+                        console.log("__________________________________")
+                        console.log(" ")
+                        console.log("Text: " + tweets[i].text);
+                        console.log(" ")
+                        console.log("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
+                        console.log(" ")
+                        console.log("Created at: " + tweets[i].created_at);
+                        console.log("__________________________________")
+                        console.log(" ")
+                    }
+                }
 
           });
         break;
 
         case 'spotify-this-song':
         
-        var song_title = value
+            var song_title = value
 
-        if(!song_title){
-            song_title = "The Sign"
-        }
+            if(!song_title){
+                song_title = "The Sign"
+            }
 
-        var spotify = new SpotifyWebApi({
-            clientId: client_id,
-            clientSecret: client_secret
-        });
 
-        spotify.clientCredentialsGrant()
-            .then(function (data){
-                spotify.setAccessToken(data.body['access_token']);
-                spotify.searchTracks(song_title)
-                    .then(function (data){
-                        var song = data.body.tracks.items[0]
-                        console.log(" ")
-                        console.log("Artist Name: " + song.artists[0].name)
-                        console.log("__________________________________")
-                        console.log(" ")
-                        console.log("Song Name: " + song.name)
-                        console.log("__________________________________")
-                        console.log(" ")
-                        console.log("Song Preview: " + song.preview_url)
-                        console.log("__________________________________")
-                        console.log(" ")
-                        console.log("Album Name: " + song.album.name)
-                        console.log(" ")
-                    })
+            var spotify = new SpotifyWebApi({
+                clientId: client_id,
+                clientSecret: client_secret
+            });
+
+            spotify.clientCredentialsGrant()
+                .then(function (data){
+                    spotify.setAccessToken(data.body['access_token']);
+                    spotify.searchTracks(song_title)
+                        .then(function (data){
+                            var song = data.body.tracks.items[0]
+                            console.log(" ")
+                            console.log("Artist Name: " + song.artists[0].name)
+                            console.log("__________________________________")
+                            console.log(" ")
+                            console.log("Song Name: " + song.name)
+                            console.log("__________________________________")
+                            console.log(" ")
+                            console.log("Song Preview: " + song.preview_url)
+                            console.log("__________________________________")
+                            console.log(" ")
+                            console.log("Album Name: " + song.album.name)
+                            console.log(" ")
+                        })
+                })
+
+        break;
+
+        case 'do-what-it-says':
+            fs.readFile("random.txt", "utf8", function(error,data){
+
+            if(error){
+                return error
+            }
+
+            if(!error){
+                data_song = data.split(",")
+                console.log(data_song[1])
+
+                     
+                var spotify = new SpotifyWebApi({
+                clientId: client_id,
+                clientSecret: client_secret
+                });
+
+                spotify.clientCredentialsGrant()
+                .then(function (data){
+                    spotify.setAccessToken(data.body['access_token']);
+                    spotify.searchTracks(data_song[1])
+                        .then(function (data){
+                            var song = data.body.tracks.items[0]
+                            console.log(" ")
+                            console.log("Artist Name: " + song.artists[0].name)
+                            console.log("__________________________________")
+                            console.log(" ")
+                            console.log("Song Name: " + song.name)
+                            console.log("__________________________________")
+                            console.log(" ")
+                            console.log("Song Preview: " + song.preview_url)
+                            console.log("__________________________________")
+                            console.log(" ")
+                            console.log("Album Name: " + song.album.name)
+                            console.log(" ")
+                        })
+                })
+            }
             })
     }
     
