@@ -11,14 +11,19 @@ var client_secret = key.spotifyKeys.client_secret;
 
 
 var keyword = process.argv[2];
-var input = process.argv[3];;
+var input = process.argv[3];
 
     switch(keyword){
         case 'movie-this':
         var movie_title = input
 
+        if (!movie_title){
+            movie_title = "Mr Nobody";
+        }
+
         var movie_url = "http://www.omdbapi.com/?t=" + movie_title +"&plot=short&apikey=40e9cece"
         console.log(movie_url)
+
             request(movie_url, function(error, response, body){
 
                 if(error){
@@ -26,6 +31,7 @@ var input = process.argv[3];;
                 }
           
                   if(!error && response.statusCode == "200"){
+
           
                     var movie = JSON.parse(body)
                     
@@ -53,6 +59,7 @@ var input = process.argv[3];;
                   }
                 })
         break;
+
     }
 
 
