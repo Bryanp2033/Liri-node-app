@@ -4,7 +4,7 @@ var Twitter = require('twitter');
 var fs = require('fs')
 var key = require("./keys.js");
 
-
+// keys from keys.js
 var consumer_key = key.twitterKeys.consumer_key;
 var consumer_secret = key.twitterKeys.consumer_secret;
 var access_token_key = key.twitterKeys.access_token_key;
@@ -13,19 +13,23 @@ var access_token_secret =  key.twitterKeys.access_token_secret;
 var client_id = key.spotifyKeys.client_id;
 var client_secret = key.spotifyKeys.client_secret;
 
-
+// first word input after node liri.js
 var keyword = process.argv[2];
+
+// second word input after node liri.js
 var value = process.argv[3];
 
-
+    // switch statements for the first word input
     switch(keyword){
         case 'movie-this':
         var movie_title = value
 
+        // if movie-title is absent
         if (!movie_title){
             movie_title = "Mr Nobody";
         }
 
+        // the url to grab data from the omdb api
         var movie_url = "http://www.omdbapi.com/?t=" + movie_title +"&plot=short&apikey=40e9cece"
         console.log(movie_url)
 
@@ -37,7 +41,7 @@ var value = process.argv[3];
           
                   if(!error && response.statusCode == "200"){
 
-          
+                    // console.logs the information of the movie
                     var movie = JSON.parse(body)
                     
                     console.log(" ")
@@ -81,7 +85,9 @@ var value = process.argv[3];
                     console.log(error)
                 }
 
+                
                 if (!error) {
+                    // for loop that console.logs the tweets I have made/retweeted
                     for(i = 0; i < tweets.length; i++){
                         console.log("Tweet #" + [i])
                         console.log("__________________________________")
@@ -103,6 +109,7 @@ var value = process.argv[3];
         
             var song_title = value
 
+            // if song title value is absent
             if(!song_title){
                 song_title = "The Sign"
             }
@@ -113,8 +120,10 @@ var value = process.argv[3];
                 clientSecret: client_secret
             });
 
+            // Retrieve an access token
             spotify.clientCredentialsGrant()
                 .then(function (data){
+                    // Save the access token so that it's used in future calls
                     spotify.setAccessToken(data.body['access_token']);
                     spotify.searchTracks(song_title)
                         .then(function (data){
@@ -137,6 +146,8 @@ var value = process.argv[3];
         break;
 
         case 'do-what-it-says':
+            
+            // reads the random.txt file
             fs.readFile("random.txt", "utf8", function(error,data){
 
             if(error){
@@ -147,7 +158,8 @@ var value = process.argv[3];
                 data_song = data.split(",")
                 console.log(data_song[1])
 
-                     
+                //does the 'spotify-this-song' case but only for the text in the random.txt
+                // TODO: Make this dry and not repeat the same code from spotify-this-song' case
                 var spotify = new SpotifyWebApi({
                 clientId: client_id,
                 clientSecret: client_secret
